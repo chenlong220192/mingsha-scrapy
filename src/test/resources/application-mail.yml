@@ -1,0 +1,16 @@
+spring:
+  mail:
+    host: smtp.qq.com
+    port: 465
+    username: chenlong220192@qq.com
+    password: diezxckiksgscaae
+    properties:
+      mail:
+        smtp:
+          ssl:
+            enable: true
+            trust: smtp.qq.com
+            socketFactory:
+              class: javax.net.ssl.SSLSocketFactory
+    protocol: smtps
+    default-encoding: UTF-8

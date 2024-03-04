@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: scrapy
+  profiles:
+    include:
+      - logging
+      - properties
+      - mail
+      - datasource

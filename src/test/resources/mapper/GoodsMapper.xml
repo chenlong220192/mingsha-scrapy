@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cyy.scrapy.test.example.dal.mapper.GoodsMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cyy.scrapy.test.example.dal.model.GoodsDO">
+        <id column="ID" property="id"/>
+        <id column="serial" property="serial"/>
+        <id column="source" property="source"/>
+        <id column="keyword" property="keyword"/>
+        <id column="url" property="url"/>
+        <id column="name" property="name"/>
+        <id column="price" property="price"/>
+        <id column="sale_desc" property="saleDesc"/>
+        <id column="take_delivery_desc" property="takeDeliveryDesc"/>
+        <id column="shop_url" property="shopUrl"/>
+        <id column="shop_name" property="shopName"/>
+        <id column="gmt_created" property="gmtCreated"/>
+        <id column="gmt_modified" property="gmtModified"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        ID,
+        serial,
+        source,
+        keyword,
+        url,
+        name,
+        price,
+        sale_desc,
+        take_delivery_desc,
+        shop_url,
+        shop_name,
+        gmt_created,
+        gmt_modified
+    </sql>
+
+    <select id="findAll" resultMap="BaseResultMap" fetchSize="2000">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM goods
+    </select>
+
+    <select id="findAllShopUrlIsEmpty" resultMap="BaseResultMap" fetchSize="2000">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM goods
+        where serial = #{serial} AND shop_url = ''
+    </select>
+
+    <select id="findById" resultType="cyy.scrapy.test.example.dal.model.GoodsDO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM goods
+        where ID = #{id}
+    </select>
+
+    <select id="findBySerial" resultMap="BaseResultMap" fetchSize="2000">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM goods
+        where serial = #{serial}
+    </select>
+
+    <select id="countByKeyword" resultType="int">
+        SELECT
+            count(1)
+        FROM goods
+        where serial = #{serial} AND keyword = #{keyword}
+    </select>
+
+    <insert id="insert">
+        INSERT INTO goods (
+        serial,
+        source,
+        keyword,
+        url,
+        name,
+        price,
+        sale_desc,
+        take_delivery_desc,
+        shop_url,
+        shop_name,
+        gmt_created,
+        gmt_modified
+        )
+        values
+        <foreach collection="goodsDOList" item="item" index="index" separator=",">
+            (
+            #{item.serial},
+            #{item.source},
+            #{item.keyword},
+            #{item.url},
+            #{item.name},
+            #{item.price},
+            #{item.saleDesc},
+            #{item.takeDeliveryDesc},
+            #{item.shopUrl},
+            #{item.shopName},
+            CURRENT_TIMESTAMP,
+            CURRENT_TIMESTAMP
+            )
+        </foreach>
+    </insert>
+
+    <update id="update">
+        UPDATE goods
+        SET serial = #{serial},
+            source = #{source},
+            keyword = #{keyword},
+            url = #{url},
+            name = #{name},
+            price = #{price},
+            sale_desc = #{saleDesc},
+            take_delivery_desc = #{takeDeliveryDesc},
+            shop_url = #{shopUrl},
+            shop_name = #{shopName},
+            gmt_modified = NOW()
+        WHERE ID=#{id}
+    </update>
+
+</mapper>
