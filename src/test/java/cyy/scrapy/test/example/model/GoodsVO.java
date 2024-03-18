@@ -8,7 +8,7 @@ public class GoodsVO implements Serializable {
     /**
      * 搜索词
      */
-    private String source = "taobao";
+    private String source;
     /**
      * 搜索词
      */
@@ -39,6 +39,10 @@ public class GoodsVO implements Serializable {
      * 收货数量描述
      */
     private String takeDeliveryDesc;
+    /**
+     * 评价描述
+     */
+    private String evaluateDesc;
     /**
      * 价格
      */
@@ -126,6 +130,15 @@ public class GoodsVO implements Serializable {
 
     public GoodsVO setTakeDeliveryDesc(String takeDeliveryDesc) {
         this.takeDeliveryDesc = takeDeliveryDesc;
+        return this;
+    }
+
+    public String getEvaluateDesc() {
+        return evaluateDesc;
+    }
+
+    public GoodsVO setEvaluateDesc(String evaluateDesc) {
+        this.evaluateDesc = evaluateDesc;
         return this;
     }
 

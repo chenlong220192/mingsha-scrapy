@@ -112,6 +112,13 @@
 			<version>${selenium-java.version}</version>
 		</dependency>
 
-    </dependencies>
+		<!-- appium -->
+		<dependency>
+			<groupId>io.appium</groupId>
+			<artifactId>java-client</artifactId>
+			<version>7.5.1</version>
+		</dependency>
+
+	</dependencies>
 
 </project>

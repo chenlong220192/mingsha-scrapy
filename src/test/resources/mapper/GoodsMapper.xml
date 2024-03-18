@@ -13,6 +13,7 @@
         <id column="price" property="price"/>
         <id column="sale_desc" property="saleDesc"/>
         <id column="take_delivery_desc" property="takeDeliveryDesc"/>
+        <id column="evaluate_desc" property="evaluateDesc"/>
         <id column="shop_url" property="shopUrl"/>
         <id column="shop_name" property="shopName"/>
         <id column="gmt_created" property="gmtCreated"/>
@@ -30,6 +31,7 @@
         price,
         sale_desc,
         take_delivery_desc,
+        evaluate_desc,
         shop_url,
         shop_name,
         gmt_created,
@@ -80,6 +82,7 @@
         price,
         sale_desc,
         take_delivery_desc,
+        evaluate_desc,
         shop_url,
         shop_name,
         gmt_created,
@@ -96,6 +99,7 @@
             #{item.price},
             #{item.saleDesc},
             #{item.takeDeliveryDesc},
+            #{item.evaluateDesc},
             #{item.shopUrl},
             #{item.shopName},
             CURRENT_TIMESTAMP,
@@ -114,6 +118,7 @@
             price = #{price},
             sale_desc = #{saleDesc},
             take_delivery_desc = #{takeDeliveryDesc},
+            evaluate_desc = #{evaluateDesc},
             shop_url = #{shopUrl},
             shop_name = #{shopName},
             gmt_modified = NOW()

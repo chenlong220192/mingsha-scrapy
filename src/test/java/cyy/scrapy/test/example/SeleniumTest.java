@@ -4,10 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import cyy.scrapy.test.example.utils.TaobaoUtil;
+import cyy.scrapy.test.example.utils.CyyUtil;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.*;
@@ -23,7 +24,7 @@ import cyy.scrapy.test.example.utils.UserAgentUtils;
  * selenium基本功能测试
  */
 @SpringBootTest
-class SeleniumTest {
+public class SeleniumTest {
 
     private final static String CHROMEDRIVER = "/data/chromedriver/chromedriver";
 
@@ -62,7 +63,7 @@ class SeleniumTest {
                 System.getProperties().setProperty("webdriver.chrome.driver", CHROMEDRIVER);
                 driver = new ChromeDriver();
                 driver.get("https://www.taobao.com/");
-                Thread.sleep(3_000);
+                Thread.sleep(1_000);
             }
             {
                 // 创建JavaScriptExecutor对象
@@ -71,19 +72,30 @@ class SeleniumTest {
                 // 缓慢滚动到页面底部
                 long scrollHeight = (long) js.executeScript("return document.body.scrollHeight");
                 long windowHeight = (long) js.executeScript("return window.innerHeight");
-                long scrollStep = TaobaoUtil.getRandomLongInRange(25, 100); // 每次滚动的步长
+                long scrollStep = CyyUtil.getRandomLongInRange(25, 100); // 每次滚动的步长
                 long currentScroll = 0;
 
                 while (currentScroll < scrollHeight) {
                     js.executeScript("window.scrollBy(0, " + scrollStep + ")");
                     try {
-                        Thread.sleep(TaobaoUtil.getRandomLongInRange(5, 10)); // 每次滚动后等待10毫秒
+                        Thread.sleep(CyyUtil.getRandomLongInRange(5, 10)); // 每次滚动后等待10毫秒
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                     currentScroll += scrollStep;
                     scrollHeight = (long) js.executeScript("return document.body.scrollHeight");
                 }
+            }
+            {
+                // 获取页面高度
+                long pageHeight = (Long) ((JavascriptExecutor) driver).executeScript("return document.body.scrollHeight");
+
+                // 计算页面一半的位置
+                long halfPageHeight = pageHeight / 2;
+
+                // 使用 JavaScript 滚动到页面一半的位置
+                String script = "window.scrollTo(0, " + halfPageHeight + ");";
+                ((JavascriptExecutor) driver).executeScript(script);
             }
             Thread.sleep(30_000);
         } catch (Exception e) {
@@ -445,7 +457,7 @@ class SeleniumTest {
      * @throws InterruptedException
      */
     @Test
-    public void testNewTab() throws InterruptedException, IOException {
+    public void testNewTab() {
         WebDriver driver = null;
         try {
             {
@@ -494,6 +506,116 @@ class SeleniumTest {
             System.out.println("切换到第【4】个标签");
             // mock do something
             Thread.sleep(1_000);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (driver != null) {
+                driver.quit();
+            }
+        }
+    }
+
+    /**
+     * 加载用户配置
+     *
+     * @throws InterruptedException
+     */
+    @Test
+    public void testLoadUserContent() {
+        WebDriver driver = null;
+        try {
+            {
+                //
+                System.getProperties().setProperty("webdriver.chrome.driver", CHROMEDRIVER);
+                ChromeOptions chromeOptions = new ChromeOptions();
+                // 禁用WebDriver特征
+                chromeOptions.addArguments("--disable-blink-features");
+                chromeOptions.addArguments("--disable-blink-features=AutomationControlled");
+                // 加载用户配置
+                chromeOptions.addArguments("--user-data-dir=/Users/chenlong/Library/Application Support/Google/Chrome");
+                driver = new ChromeDriver(chromeOptions);
+            }
+
+            // 1、打开标签页
+            // 打开第【1】个标签页
+            driver.get("https://www.baidu.com/");
+            // mock do something
+            Thread.sleep(1000_000);
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (driver != null) {
+                driver.quit();
+            }
+        }
+    }
+
+    /**
+     * 禁用特征
+     *
+     * @throws InterruptedException
+     */
+    @Test
+    public void testInvisible() {
+        WebDriver driver = null;
+        try {
+            {
+                //
+                System.getProperties().setProperty("webdriver.chrome.driver", CHROMEDRIVER);
+                ChromeOptions chromeOptions = new ChromeOptions();
+                // 禁用WebDriver特征
+                chromeOptions.addArguments("--disable-blink-features");
+                chromeOptions.addArguments("--disable-blink-features=AutomationControlled");
+                // 隐身模式
+//                chromeOptions.addArguments("--incognito");
+                driver = new ChromeDriver(chromeOptions);
+            }
+
+            // 1、打开标签页
+            // 打开第【1】个标签页
+            driver.get("https://www.baidu.com/");
+            // mock do something
+            Thread.sleep(1000_000);
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (driver != null) {
+                driver.quit();
+            }
+        }
+    }
+
+    /**
+     * 模拟app
+     *
+     * @throws InterruptedException
+     */
+    @Test
+    public void testApp() {
+        WebDriver driver = null;
+        try {
+            {
+                //
+                System.getProperties().setProperty("webdriver.chrome.driver", CHROMEDRIVER);
+                ChromeOptions chromeOptions = new ChromeOptions();
+                // 禁用WebDriver特征
+                chromeOptions.addArguments("--disable-blink-features");
+                chromeOptions.addArguments("--disable-blink-features=AutomationControlled");
+                //模拟iPhone 6
+//                chromeOptions.addArguments("user-agent=\"Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1");
+                //模拟 android QQ浏览器
+                chromeOptions.addArguments("user-agent=\"MQQBrowser/26 Mozilla/5.0 (Linux; U; Android 2.3.7; zh-cn; MB200 Build/GRJ22; CyanogenMod-7) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1");
+                driver = new ChromeDriver(chromeOptions);
+            }
+
+            // 1、打开标签页
+            // 打开第【1】个标签页
+            driver.get("https://www.baidu.com/");
+            // mock do something
+            Thread.sleep(1000_000);
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         } finally {

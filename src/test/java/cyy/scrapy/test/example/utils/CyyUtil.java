@@ -1,12 +1,12 @@
 package cyy.scrapy.test.example.utils;
 
-import org.openqa.selenium.WebElement;
-
 import java.text.DecimalFormat;
 import java.util.Objects;
 import java.util.Random;
 
-public class TaobaoUtil {
+import org.openqa.selenium.WebElement;
+
+public class CyyUtil {
 
     /**
      *
@@ -78,15 +78,6 @@ public class TaobaoUtil {
      */
     public static String warpNull4Text(WebElement element){
         return Objects.nonNull(element) ? element.getText() : null;
-    }
-
-    /**
-     *
-     * @param element
-     * @return
-     */
-    public static String warpNull4Attribute(WebElement element){
-        return Objects.nonNull(element) ? element.getAttribute("shopid") : null;
     }
 
 }

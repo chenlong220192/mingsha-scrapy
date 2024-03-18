@@ -17,6 +17,8 @@ public class GoodsDO implements Serializable {
     private String price;
     private String saleDesc;
     private String takeDeliveryDesc;
+
+    private String evaluateDesc;
     private String shopUrl;
     private String shopName;
     private Date   gmtCreated;
@@ -26,104 +28,126 @@ public class GoodsDO implements Serializable {
         return id;
     }
 
-    public void setId(Long id) {
+    public GoodsDO setId(Long id) {
         this.id = id;
+        return this;
     }
 
     public String getSerial() {
         return serial;
     }
 
-    public void setSerial(String serial) {
+    public GoodsDO setSerial(String serial) {
         this.serial = serial;
+        return this;
     }
 
     public String getSource() {
         return source;
     }
 
-    public void setSource(String source) {
+    public GoodsDO setSource(String source) {
         this.source = source;
+        return this;
     }
 
     public String getKeyword() {
         return keyword;
     }
 
-    public void setKeyword(String keyword) {
+    public GoodsDO setKeyword(String keyword) {
         this.keyword = keyword;
+        return this;
     }
 
     public String getUrl() {
         return url;
     }
 
-    public void setUrl(String url) {
+    public GoodsDO setUrl(String url) {
         this.url = url;
+        return this;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public GoodsDO setName(String name) {
         this.name = name;
+        return this;
     }
 
     public String getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public GoodsDO setPrice(String price) {
         this.price = price;
+        return this;
     }
 
     public String getSaleDesc() {
         return saleDesc;
     }
 
-    public void setSaleDesc(String saleDesc) {
+    public GoodsDO setSaleDesc(String saleDesc) {
         this.saleDesc = saleDesc;
+        return this;
     }
 
     public String getTakeDeliveryDesc() {
         return takeDeliveryDesc;
     }
 
-    public void setTakeDeliveryDesc(String takeDeliveryDesc) {
+    public GoodsDO setTakeDeliveryDesc(String takeDeliveryDesc) {
         this.takeDeliveryDesc = takeDeliveryDesc;
+        return this;
+    }
+
+    public String getEvaluateDesc() {
+        return evaluateDesc;
+    }
+
+    public GoodsDO setEvaluateDesc(String evaluateDesc) {
+        this.evaluateDesc = evaluateDesc;
+        return this;
     }
 
     public String getShopUrl() {
         return shopUrl;
     }
 
-    public void setShopUrl(String shopUrl) {
+    public GoodsDO setShopUrl(String shopUrl) {
         this.shopUrl = shopUrl;
+        return this;
     }
 
     public String getShopName() {
         return shopName;
     }
 
-    public void setShopName(String shopName) {
+    public GoodsDO setShopName(String shopName) {
         this.shopName = shopName;
+        return this;
     }
 
     public Date getGmtCreated() {
         return gmtCreated;
     }
 
-    public void setGmtCreated(Date gmtCreated) {
+    public GoodsDO setGmtCreated(Date gmtCreated) {
         this.gmtCreated = gmtCreated;
+        return this;
     }
 
     public Date getGmtModified() {
         return gmtModified;
     }
 
-    public void setGmtModified(Date gmtModified) {
+    public GoodsDO setGmtModified(Date gmtModified) {
         this.gmtModified = gmtModified;
+        return this;
     }
 
     @Override
@@ -138,6 +162,7 @@ public class GoodsDO implements Serializable {
                 ", price='" + price + '\'' +
                 ", saleDesc='" + saleDesc + '\'' +
                 ", takeDeliveryDesc='" + takeDeliveryDesc + '\'' +
+                ", evaluateDesc='" + evaluateDesc + '\'' +
                 ", shopUrl='" + shopUrl + '\'' +
                 ", shopName='" + shopName + '\'' +
                 ", gmtCreated=" + gmtCreated +

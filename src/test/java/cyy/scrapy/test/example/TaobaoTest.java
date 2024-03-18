@@ -2,6 +2,7 @@ package cyy.scrapy.test.example;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.stream.Collectors;
@@ -10,6 +11,7 @@ import javax.annotation.Resource;
 
 import cyy.scrapy.test.example.component.MailComponent;
 import cyy.scrapy.test.example.utils.PoiUtils;
+import cyy.scrapy.test.example.utils.UserAgentUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
@@ -17,6 +19,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
@@ -30,13 +33,13 @@ import cyy.scrapy.test.example.dal.mapper.GoodsMapper;
 import cyy.scrapy.test.example.dal.model.GoodsDO;
 import cyy.scrapy.test.example.model.GoodsVO;
 import cyy.scrapy.test.example.utils.ListSplitUtils;
-import cyy.scrapy.test.example.utils.TaobaoUtil;
+import cyy.scrapy.test.example.utils.CyyUtil;
 
 /**
- * 利用selenium实现taobao数据爬取
+ * 利用selenium实现数据爬取
  */
 @SpringBootTest
-class TaobaoTest {
+public class TaobaoTest {
 
     private static final Logger  logger                               = LoggerFactory.getLogger(TaobaoTest.class);
 
@@ -45,19 +48,19 @@ class TaobaoTest {
      */
     private final static String  URL_LOGIN                            = "https://login.taobao.com/";
     private final static String  URL_INDEX                            = "https://www.taobao.com/";
-    private final static String  GOODS_EXCEL_PATH                     = "/data/tmp/goods.xlsx";
+    private final static String  GOODS_EXCEL_PATH                     = "/data/tmp/goods_taobao.xlsx";
 
     private final static int     MAX_PAGE                             = 10;
 
     private final static long    SLEEP_TIME_LEFT                      = 15_000;
-    private final static long    SLEEP_TIME_RIGHT                     = 30_000;
+    private final static long    SLEEP_TIME_RIGHT                     = 60_000;
 
     /* ----------------------------------------------------------------------- */
 
     /**
      *
      */
-    @Value("#{'${taobao.keyword}'.split(',')}")
+    @Value("#{'${keyword.taobao}'.split(',')}")
     private List<String>         KEYWORD;
 
     /* ----------------------------------------------------------------------- */
@@ -104,7 +107,7 @@ class TaobaoTest {
      */
     @Test
     public void testTaobaoCollector() {
-        final String serial = "1";
+        final String serial = "taobao_2";
         List<List<String>> keywordList = ListSplitUtils.splitWithPart(KEYWORD, 1);
         keywordList.forEach(keywordListTemp -> {
             POOL_COLLECTOR.execute(() -> {
@@ -130,7 +133,7 @@ class TaobaoTest {
      */
     @Test
     public void testTaobaoAnalyzer() {
-        final String serial = "1";
+        final String serial = "taobao_2";
         List<GoodsDO> goodsDOList = goodsMapper.findAllShopUrlIsEmpty(serial);
         if (CollectionUtils.isEmpty(goodsDOList)) {
             logger.info("任务结束");
@@ -161,7 +164,7 @@ class TaobaoTest {
      */
     @Test
     public void testTaobaoGoodsMail() {
-        final String serial = "1";
+        final String serial = "taobao_2";
         List<GoodsDO> goodsDOList = goodsMapper.findBySerial(serial);
         if (CollectionUtils.isEmpty(goodsDOList)) {
             return;
@@ -191,8 +194,59 @@ class TaobaoTest {
         );
         // mail
         mailComponent.sendMail4Mime(
-                String.format("【CYY】This is auto mail for %s","taobao"),
-                String.format("LOVE YOU~~~%n总数:%d条%n商户链接完整:%d条%n", goodsDOList.size(), data.size()),
+                String.format("【CYY】This is auto mail for %s","goods_taobao"),
+                String.format("LOVE YOU~~~%n总数:%d条%n", data.size()),
+                GOODS_EXCEL_PATH
+        );
+    }
+
+    /**
+     *
+     */
+    @Test
+    public void testTaobaoGoodsMatchShopInfo() {
+        final String serial = "taobao_2";
+
+        List<GoodsDO> goodsDOList = goodsMapper.findBySerial(serial);
+        if (CollectionUtils.isEmpty(goodsDOList)) {
+            return;
+        }
+
+        List<List<String>> shopData = PoiUtils.readExcel("/data/tmp/scrapy.xlsx",4);
+        Map<String, List<List<String>>> groupedByShopId = shopData.stream().collect(Collectors.groupingBy(row -> row.get(0)));
+
+        List<List<String>> goodsData = Lists.newArrayList();
+        for (int i = 0; i < goodsDOList.size(); i++) {
+            GoodsDO goodsDO = goodsDOList.get(i);
+            String shopId = StringUtils.isNotBlank(goodsDO.getShopUrl()) ? String.format("cn.taobao.%s",goodsDO.getShopUrl().replace("https://shop","").replace(".taobao.com/","").replace("/","").replace(" ","")) : "";
+            List<List<String>> shopDataByShopId = StringUtils.isNotBlank(shopId) ? groupedByShopId.get(shopId) : null;
+
+            goodsData.add(
+                    Lists.newArrayList(
+                            String.valueOf((i + 1)),
+                            goodsDO.getSource(),
+                            goodsDO.getKeyword(),
+                            goodsDO.getName(),
+                            goodsDO.getSaleDesc(),
+                            goodsDO.getTakeDeliveryDesc(),
+                            goodsDO.getPrice(),
+                            goodsDO.getUrl(),
+                            goodsDO.getShopName(),
+                            goodsDO.getShopUrl(),
+                            new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(goodsDO.getGmtCreated()),
+                            shopId,
+                            shopDataByShopId != null ? shopDataByShopId.get(0).get(1) : "",
+                            shopDataByShopId != null ? shopDataByShopId.get(0).get(2) : "",
+                            shopDataByShopId != null ? shopDataByShopId.get(0).get(3) : "",
+                            shopDataByShopId != null ? shopDataByShopId.get(0).get(4) : "",
+                            shopDataByShopId != null ? shopDataByShopId.get(0).get(5) : ""
+                    )
+            );
+        }
+        // poi
+        PoiUtils.writeToExcel(
+                Lists.newArrayList("序号", "平台", "搜索词", "商品名称", "销售描述", "收货描述", "商品价格", "商品链接", "店铺名称", "店铺链接", "采集时间", "店铺id", "店铺状态", "是否黑榜", "会否配饰抓取", "会否白牌店铺", "是否类目隐藏"),
+                goodsData,
                 GOODS_EXCEL_PATH
         );
     }
@@ -207,14 +261,25 @@ class TaobaoTest {
     private void collectGoodsListPage(String serial, List<String> keywordList) {
         WebDriver driver = null;
         try {
-            //
-            System.getProperties().setProperty("webdriver.chrome.driver", "/data/chromedriver/chromedriver");
-            driver = new ChromeDriver();
+            {
+                //
+                final ChromeOptions chromeOptions = new ChromeOptions();
+                // 在Linux系统下需要添加该选项
+                chromeOptions.addArguments("--disable-dev-shm-usage");
+                // 设置随机 User-Agent
+                chromeOptions.addArguments("user-agent=" + UserAgentUtils.getRandomUserAgent());
+                // 禁用WebDriver特征
+                chromeOptions.addArguments("--disable-blink-features");
+                chromeOptions.addArguments("--disable-blink-features=AutomationControlled");
+                //
+                System.getProperties().setProperty("webdriver.chrome.driver", "/data/chromedriver/chromedriver");
+                driver = new ChromeDriver(chromeOptions);
+            }
 
             // 1、登陆
             login(driver);
             // ---------- 显式等待直到元素可见 ----------
-            wait(driver, ID_QUERY, 60, TaobaoUtil.getRandomLongInRange(10, 3000));
+            wait(driver, ID_QUERY, 60, CyyUtil.getRandomLongInRange(10, 3000));
             // echo
             logger.info("登陆成功");
             // collect target goods
@@ -268,7 +333,7 @@ class TaobaoTest {
                 // 下一页
                 next(driver);
                 // ---------- 休眠，模拟人工操作。 ----------
-                TaobaoUtil.sleep(TaobaoUtil.getRandomLongInRange(SLEEP_TIME_LEFT, SLEEP_TIME_RIGHT));
+                CyyUtil.sleep(CyyUtil.getRandomLongInRange(SLEEP_TIME_LEFT, SLEEP_TIME_RIGHT));
             }
         } catch (Exception e) {
             logger.debug(String.format("Moudle:[%s]%n%s", "collectGoodsList", e.getMessage()));
@@ -285,7 +350,7 @@ class TaobaoTest {
         // 打开首页
         driver.get(URL_INDEX);
         // ---------- 显式等待直到元素可见 ----------
-        wait(driver, ID_QUERY, 10, TaobaoUtil.getRandomLongInRange(1000, 3000));
+        wait(driver, ID_QUERY, 10, CyyUtil.getRandomLongInRange(1000, 3000));
         // echo
         logger.info("打开taobao.com首页");
         // input keyword
@@ -293,13 +358,13 @@ class TaobaoTest {
         // echo
         logger.info("输入关键词：" + keyword);
         // ---------- 休眠，模拟人工操作。 ----------
-        TaobaoUtil.sleep(TaobaoUtil.getRandomLongInRange(3_000, 10_000));
+        CyyUtil.sleep(CyyUtil.getRandomLongInRange(3_000, 10_000));
         // 排序
         sortBySales(driver);
         // echo
         logger.info("点击按销量排序");
         // ---------- 休眠，模拟人工操作。 ----------
-        TaobaoUtil.sleep(TaobaoUtil.getRandomLongInRange(3_000, 10_000));
+        CyyUtil.sleep(CyyUtil.getRandomLongInRange(3_000, 10_000));
     }
 
     /**
@@ -325,7 +390,7 @@ class TaobaoTest {
                 WebElement webElement4GoodsPriceFloat = linkElements4GoodsPriceFloatList.get(i);
                 WebElement webElement4GoodsTakeDeliveryDesc = linkElements4GoodsTakeDeliveryDescList.get(i);
                 WebElement webElement4GoodsShop = linkElements4GoodsShopList.get(i);
-                targetGoodsList.add(GoodsVO.newInstance().setSerial(serial).setKeyword(keyword).setGoodsUrl(webElement4Goods.getAttribute("href"))
+                targetGoodsList.add(GoodsVO.newInstance().setSerial(serial).setSource("taobao").setKeyword(keyword).setGoodsUrl(webElement4Goods.getAttribute("href"))
                     .setGoodsName(webElement4GoodsName.getText()).setPrice(String.format("%s%s", webElement4GoodsPriceInt.getText(), webElement4GoodsPriceFloat.getText()))
                     .setTakeDeliveryDesc(webElement4GoodsTakeDeliveryDesc.getText()).setSaleDesc(StringUtils.EMPTY).setShopUrl(StringUtils.EMPTY)
                     .setShopName(webElement4GoodsShop.getText()));
@@ -380,13 +445,13 @@ class TaobaoTest {
             // echo
             logger.info("打开商品信息页面：" + goods.getGoodsUrl());
             // ---------- 休眠，模拟人工操作。 ----------
-            TaobaoUtil.sleep(TaobaoUtil.getRandomLongInRange(SLEEP_TIME_LEFT, SLEEP_TIME_RIGHT));
+            CyyUtil.sleep(CyyUtil.getRandomLongInRange(SLEEP_TIME_LEFT, SLEEP_TIME_RIGHT));
             //
             WebElement element = findElementByXpath(driver, XPATH_GOODS_PAGE_SHOP_URL);
             if (Objects.nonNull(element)) {
                 goods.setShopUrl(element.getAttribute("href"));
             }
-            goods.setSaleDesc(TaobaoUtil.warpNull4Text(findElementByClassName(driver, CLASSNAME_GOODS_SALESDESC)));
+            goods.setSaleDesc(CyyUtil.warpNull4Text(findElementByClassName(driver, CLASSNAME_GOODS_SALESDESC)));
         } catch (Exception e) {
             logger.debug(String.format("Moudle:[%s]%n%s", "parseGoodsPage", e.getMessage()));
         }
@@ -400,13 +465,25 @@ class TaobaoTest {
     private void analysisGoodsPage(List<GoodsDO> goodsDOList) {
         WebDriver driver = null;
         try {
-            System.getProperties().setProperty("webdriver.chrome.driver", "/data/chromedriver/chromedriver");
-            driver = new ChromeDriver();
+            {
+                //
+                final ChromeOptions chromeOptions = new ChromeOptions();
+                // 在Linux系统下需要添加该选项
+                chromeOptions.addArguments("--disable-dev-shm-usage");
+                // 设置随机 User-Agent
+                chromeOptions.addArguments("user-agent=" + UserAgentUtils.getRandomUserAgent());
+                // 禁用WebDriver特征
+                chromeOptions.addArguments("--disable-blink-features");
+                chromeOptions.addArguments("--disable-blink-features=AutomationControlled");
+                //
+                System.getProperties().setProperty("webdriver.chrome.driver", "/data/chromedriver/chromedriver");
+                driver = new ChromeDriver(chromeOptions);
+            }
 
             // 1、登陆
             login(driver);
             // ---------- 显式等待直到元素可见 ----------
-            wait(driver, ID_QUERY, 180, TaobaoUtil.getRandomLongInRange(1_000, 15_000));
+            wait(driver, ID_QUERY, 180, CyyUtil.getRandomLongInRange(1_000, 15_000));
             // echo
             logger.info("登陆成功");
 
