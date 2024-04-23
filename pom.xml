@@ -10,8 +10,8 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
-	<groupId>cyy</groupId>
-	<artifactId>cyy-scrapy</artifactId>
+	<groupId>mingsha</groupId>
+	<artifactId>mingsha-scrapy</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
 	<name>scrapy</name>

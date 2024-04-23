@@ -1,4 +1,4 @@
-package cyy.scrapy.test.example;
+package site.mingsha.scrapy.test.example;
 
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;

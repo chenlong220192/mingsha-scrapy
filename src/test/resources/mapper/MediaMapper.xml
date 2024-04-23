@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="site.mingsha.scrapy.test.example.dal.mapper.MediaMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="site.mingsha.scrapy.test.example.dal.model.MediaDO">
+        <id column="ID" property="id"/>
+        <id column="goods_id" property="goodsId"/>
+        <id column="url" property="url"/>
+        <id column="local_url" property="localUrl"/>
+        <id column="gmt_created" property="gmtCreated"/>
+        <id column="gmt_modified" property="gmtModified"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        ID,
+        goods_id,
+        url,
+        local_url,
+        gmt_created,
+        gmt_modified
+    </sql>
+
+    <select id="findByGoodsId" resultType="site.mingsha.scrapy.test.example.dal.model.MediaDO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM media
+        where goods_id = #{goodsId}
+    </select>
+
+    <insert id="insert">
+        INSERT INTO media (
+        goods_id,
+        url,
+        local_url,
+        gmt_created,
+        gmt_modified
+        )
+        values
+        <foreach collection="mediaDOList" item="item" index="index" separator=",">
+            (
+            #{item.goodsId},
+            #{item.url},
+            #{item.localUrl},
+            CURRENT_TIMESTAMP,
+            CURRENT_TIMESTAMP
+            )
+        </foreach>
+    </insert>
+
+</mapper>

@@ -1,4 +1,4 @@
-package cyy.scrapy.test.example;
+package site.mingsha.scrapy.test.example;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -9,14 +9,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.Lists;
-import cyy.scrapy.test.example.component.MailComponent;
-import cyy.scrapy.test.example.dal.mapper.GoodsMapper;
-import cyy.scrapy.test.example.dal.model.GoodsDO;
-import cyy.scrapy.test.example.model.GoodsVO;
-import cyy.scrapy.test.example.utils.ListSplitUtils;
-import cyy.scrapy.test.example.utils.PoiUtils;
-import cyy.scrapy.test.example.utils.CyyUtil;
-import cyy.scrapy.test.example.utils.UserAgentUtils;
+import site.mingsha.scrapy.test.example.component.MailComponent;
+import site.mingsha.scrapy.test.example.dal.mapper.GoodsMapper;
+import site.mingsha.scrapy.test.example.dal.model.GoodsDO;
+import site.mingsha.scrapy.test.example.model.GoodsVO;
+import site.mingsha.scrapy.test.example.utils.ListSplitUtils;
+import site.mingsha.scrapy.test.example.utils.PoiUtils;
+import site.mingsha.scrapy.test.example.utils.MingshaUtil;
+import site.mingsha.scrapy.test.example.utils.UserAgentUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
@@ -143,7 +143,7 @@ public class JdTest {
         // poi
         PoiUtils.writeToExcel(Lists.newArrayList("序号", "平台", "搜索词", "商品名称", "评价描述", "商品价格", "商品链接", "店铺名称", "店铺ID", "店铺链接", "采集时间"), data, GOODS_EXCEL_PATH);
         // mail
-        mailComponent.sendMail4Mime(String.format("【CYY】This is auto mail for %s", "goods_jd"), String.format("LOVE YOU~~~%n总数:%d条%n", data.size()), GOODS_EXCEL_PATH);
+        mailComponent.sendMail4Mime(String.format("【mingsha】This is auto mail for %s", "goods_jd"), String.format("LOVE YOU~~~%n总数:%d条%n", data.size()), GOODS_EXCEL_PATH);
     }
 
     /**
@@ -222,7 +222,7 @@ public class JdTest {
             // 1、登陆
             login(driver);
             // ---------- 显式等待直到元素可见 ----------
-            wait(driver, ID_QUERY, 10, CyyUtil.getRandomLongInRange(1_000, 10_000));
+            wait(driver, ID_QUERY, 10, MingshaUtil.getRandomLongInRange(1_000, 10_000));
             // echo
             logger.info("登陆成功");
             // collect target goods
@@ -302,7 +302,7 @@ public class JdTest {
                 // 下一页
                 next(driver);
                 // ---------- 休眠，模拟人工操作。 ----------
-                CyyUtil.sleep(CyyUtil.getRandomLongInRange(1_000, 3_000));
+                MingshaUtil.sleep(MingshaUtil.getRandomLongInRange(1_000, 3_000));
             }
         } catch (Exception e) {
             logger.debug(String.format("Moudle:[%s]%n%s", "collectGoodsList", e.getMessage()));
@@ -321,14 +321,14 @@ public class JdTest {
         // echo
         logger.info("打开jd.com首页");
         // ---------- 显式等待直到元素可见 ----------
-        wait(driver, ID_QUERY, 10, CyyUtil.getRandomLongInRange(1_000, 10_000));
+        wait(driver, ID_QUERY, 10, MingshaUtil.getRandomLongInRange(1_000, 10_000));
 
         // input keyword
         inputKeyword(driver, keyword);
         // echo
         logger.info("输入关键词：" + keyword);
         // ---------- 休眠，模拟人工操作。 ----------
-        CyyUtil.sleep(CyyUtil.getRandomLongInRange(500, 5_000));
+        MingshaUtil.sleep(MingshaUtil.getRandomLongInRange(500, 5_000));
         /* +++++++++++++++++++++++++ */
         verifyPage(driver);
         /* +++++++++++++++++++++++++ */
@@ -338,7 +338,7 @@ public class JdTest {
         // echo
         logger.info("点击按销量排序");
         // ---------- 休眠，模拟人工操作。 ----------
-        CyyUtil.sleep(CyyUtil.getRandomLongInRange(500, 5_000));
+        MingshaUtil.sleep(MingshaUtil.getRandomLongInRange(500, 5_000));
         /* +++++++++++++++++++++++++ */
         verifyPage(driver);
         /* +++++++++++++++++++++++++ */
@@ -395,7 +395,7 @@ public class JdTest {
             // echo
             logger.info("点击下一页");
             // ---------- 休眠，模拟人工操作。 ----------
-            CyyUtil.sleep(CyyUtil.getRandomLongInRange(1_500, 3_000));
+            MingshaUtil.sleep(MingshaUtil.getRandomLongInRange(1_500, 3_000));
             /* +++++++++++++++++++++++++ */
             verifyPage(driver);
             /* +++++++++++++++++++++++++ */
@@ -458,7 +458,7 @@ public class JdTest {
                     // scrollHere((JavascriptExecutor) driver, 2);
                 }
                 // ---------- 休眠，模拟人工操作。 ----------
-                CyyUtil.sleep(CyyUtil.getRandomLongInRange(1_000, 2_000));
+                MingshaUtil.sleep(MingshaUtil.getRandomLongInRange(1_000, 2_000));
                 continue;
             }
             //
@@ -472,7 +472,7 @@ public class JdTest {
                 actions.click(elements.get(0)).perform();
                 // logger.warn(String.format("页面重试ing... URL:%s", driver.getCurrentUrl()));
                 // ---------- 休眠，模拟人工操作。 ----------
-                CyyUtil.sleep(CyyUtil.getRandomLongInRange(500, 1_000));
+                MingshaUtil.sleep(MingshaUtil.getRandomLongInRange(500, 1_000));
                 /* +++++++++++++++++++++++++ */
                 verifyPage(driver);
                 /* +++++++++++++++++++++++++ */
@@ -585,7 +585,7 @@ public class JdTest {
                 return;
             }
             // ---------- 显式等待直到元素可见 ----------
-            wait(driver, ID_QUERY, 10, CyyUtil.getRandomLongInRange(30_000, 60_000));
+            wait(driver, ID_QUERY, 10, MingshaUtil.getRandomLongInRange(30_000, 60_000));
         } catch (Exception e) {
             logger.debug(String.format("Moudle:[%s]%n%s", "wait", e.getMessage()));
         }
@@ -603,13 +603,13 @@ public class JdTest {
         // 缓慢滚动到页面底部
         long scrollHeight = (long) js.executeScript("return document.body.scrollHeight");
         long windowHeight = (long) js.executeScript("return window.innerHeight");
-        long scrollStep = CyyUtil.getRandomLongInRange(25, 150); // 每次滚动的步长
+        long scrollStep = MingshaUtil.getRandomLongInRange(25, 150); // 每次滚动的步长
         long currentScroll = 0;
 
         while (currentScroll < scrollHeight) {
             js.executeScript("window.scrollBy(0, " + scrollStep + ")");
             try {
-                Thread.sleep(CyyUtil.getRandomLongInRange(10, 100)); // 每次滚动后等待10毫秒
+                Thread.sleep(MingshaUtil.getRandomLongInRange(10, 100)); // 每次滚动后等待10毫秒
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

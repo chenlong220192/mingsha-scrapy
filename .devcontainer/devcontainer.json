@@ -1,4 +1,4 @@
 {
-    "name": "cyy-scrapy",
+    "name": "mingsha-scrapy",
     "dockerFile": "Dockerfile"
 }

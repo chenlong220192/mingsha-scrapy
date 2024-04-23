@@ -1,4 +1,4 @@
-package cyy.scrapy.test.example;
+package site.mingsha.scrapy.test.example;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import cyy.scrapy.test.example.utils.CyyUtil;
+import site.mingsha.scrapy.test.example.utils.MingshaUtil;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.*;
@@ -18,7 +18,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import cyy.scrapy.test.example.utils.UserAgentUtils;
+import site.mingsha.scrapy.test.example.utils.UserAgentUtils;
 
 /**
  * selenium基本功能测试
@@ -72,13 +72,13 @@ public class SeleniumTest {
                 // 缓慢滚动到页面底部
                 long scrollHeight = (long) js.executeScript("return document.body.scrollHeight");
                 long windowHeight = (long) js.executeScript("return window.innerHeight");
-                long scrollStep = CyyUtil.getRandomLongInRange(25, 100); // 每次滚动的步长
+                long scrollStep = MingshaUtil.getRandomLongInRange(25, 100); // 每次滚动的步长
                 long currentScroll = 0;
 
                 while (currentScroll < scrollHeight) {
                     js.executeScript("window.scrollBy(0, " + scrollStep + ")");
                     try {
-                        Thread.sleep(CyyUtil.getRandomLongInRange(5, 10)); // 每次滚动后等待10毫秒
+                        Thread.sleep(MingshaUtil.getRandomLongInRange(5, 10)); // 每次滚动后等待10毫秒
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

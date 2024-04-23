@@ -1,4 +1,4 @@
-package cyy.scrapy.test.example.dal.model;
+package site.mingsha.scrapy.test.example.dal.model;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -14,6 +14,7 @@ public class GoodsDO implements Serializable {
     private String keyword;
     private String url;
     private String name;
+    private String number;
     private String price;
     private String saleDesc;
     private String takeDeliveryDesc;
@@ -75,6 +76,15 @@ public class GoodsDO implements Serializable {
 
     public GoodsDO setName(String name) {
         this.name = name;
+        return this;
+    }
+
+    public String getNumber() {
+        return number;
+    }
+
+    public GoodsDO setNumber(String number) {
+        this.number = number;
         return this;
     }
 
@@ -159,6 +169,7 @@ public class GoodsDO implements Serializable {
                 ", keyword='" + keyword + '\'' +
                 ", url='" + url + '\'' +
                 ", name='" + name + '\'' +
+                ", number='" + number + '\'' +
                 ", price='" + price + '\'' +
                 ", saleDesc='" + saleDesc + '\'' +
                 ", takeDeliveryDesc='" + takeDeliveryDesc + '\'' +

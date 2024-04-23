@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cyy.scrapy.test.example.dal.mapper.GoodsMapper">
+<mapper namespace="site.mingsha.scrapy.test.example.dal.mapper.GoodsMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="cyy.scrapy.test.example.dal.model.GoodsDO">
+    <resultMap id="BaseResultMap" type="site.mingsha.scrapy.test.example.dal.model.GoodsDO">
         <id column="ID" property="id"/>
         <id column="serial" property="serial"/>
         <id column="source" property="source"/>
         <id column="keyword" property="keyword"/>
         <id column="url" property="url"/>
         <id column="name" property="name"/>
+        <id column="number" property="number"/>
         <id column="price" property="price"/>
         <id column="sale_desc" property="saleDesc"/>
         <id column="take_delivery_desc" property="takeDeliveryDesc"/>
@@ -28,6 +29,7 @@
         keyword,
         url,
         name,
+        number,
         price,
         sale_desc,
         take_delivery_desc,
@@ -51,7 +53,7 @@
         where serial = #{serial} AND shop_url = ''
     </select>
 
-    <select id="findById" resultType="cyy.scrapy.test.example.dal.model.GoodsDO">
+    <select id="findById" resultType="site.mingsha.scrapy.test.example.dal.model.GoodsDO">
         SELECT
         <include refid="Base_Column_List"/>
         FROM goods
@@ -79,6 +81,7 @@
         keyword,
         url,
         name,
+        number,
         price,
         sale_desc,
         take_delivery_desc,
@@ -96,6 +99,7 @@
             #{item.keyword},
             #{item.url},
             #{item.name},
+            #{item.number},
             #{item.price},
             #{item.saleDesc},
             #{item.takeDeliveryDesc},
@@ -115,6 +119,7 @@
             keyword = #{keyword},
             url = #{url},
             name = #{name},
+            number = #{number},
             price = #{price},
             sale_desc = #{saleDesc},
             take_delivery_desc = #{takeDeliveryDesc},

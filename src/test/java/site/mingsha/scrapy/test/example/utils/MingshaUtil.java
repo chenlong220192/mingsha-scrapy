@@ -1,4 +1,4 @@
-package cyy.scrapy.test.example.utils;
+package site.mingsha.scrapy.test.example.utils;
 
 import java.text.DecimalFormat;
 import java.util.Objects;
@@ -6,7 +6,7 @@ import java.util.Random;
 
 import org.openqa.selenium.WebElement;
 
-public class CyyUtil {
+public class MingshaUtil {
 
     /**
      *

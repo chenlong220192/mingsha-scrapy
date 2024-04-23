@@ -1,8 +1,8 @@
-package cyy.scrapy.test.example.model;
+package site.mingsha.scrapy.test.example.model;
 
 import java.io.Serializable;
 
-public class ShopVO implements Serializable {
+public class ShopVO {
 
     /**
      * 搜索词

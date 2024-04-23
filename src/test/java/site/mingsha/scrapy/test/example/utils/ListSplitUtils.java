@@ -1,4 +1,4 @@
-package cyy.scrapy.test.example.utils;
+package site.mingsha.scrapy.test.example.utils;
 
 import java.util.List;
 

@@ -5,7 +5,7 @@
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
 
     <!--定义日志存放的位置，默认存放在项目启动的相对路径的目录-->
-    <springProperty scope="context" name="LOG_PATH" source="${logging.file.path}" defaultValue="/data/logs/cyy-scrapy"/>
+    <springProperty scope="context" name="LOG_PATH" source="${logging.file.path}" defaultValue="/data/logs/mingsha-scrapy"/>
 
     <!-- ***************************************** appender ************************************************* -->
 

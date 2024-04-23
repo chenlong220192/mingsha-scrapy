@@ -1,4 +1,4 @@
-package cyy.scrapy.test.example.component;
+package site.mingsha.scrapy.test.example.component;
 
 import java.nio.file.Files;
 import java.nio.file.Path;

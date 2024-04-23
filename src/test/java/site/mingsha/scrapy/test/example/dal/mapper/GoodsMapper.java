@@ -1,6 +1,6 @@
-package cyy.scrapy.test.example.dal.mapper;
+package site.mingsha.scrapy.test.example.dal.mapper;
 
-import cyy.scrapy.test.example.dal.model.GoodsDO;
+import site.mingsha.scrapy.test.example.dal.model.GoodsDO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

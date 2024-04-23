@@ -1,8 +1,8 @@
-package cyy.scrapy.test.example.model;
+package site.mingsha.scrapy.test.example.model;
 
 import java.io.Serializable;
 
-public class GoodsVO implements Serializable {
+public class GoodsVO {
 
     private String serial;
     /**
@@ -32,6 +32,10 @@ public class GoodsVO implements Serializable {
      */
     private String goodsName;
     /**
+     * 商品货号
+     */
+    private String goodsNo;
+    /**
      * 售卖数量描述
      */
     private String saleDesc;
@@ -43,6 +47,10 @@ public class GoodsVO implements Serializable {
      * 评价描述
      */
     private String evaluateDesc;
+    /**
+     * 货号
+     */
+    private String number;
     /**
      * 价格
      */
@@ -142,12 +150,29 @@ public class GoodsVO implements Serializable {
         return this;
     }
 
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
+    }
+
     public String getPrice() {
         return price;
     }
 
     public GoodsVO setPrice(String price) {
         this.price = price;
+        return this;
+    }
+
+    public String getGoodsNo() {
+        return goodsNo;
+    }
+
+    public GoodsVO setGoodsNo(String goodsNo) {
+        this.goodsNo = goodsNo;
         return this;
     }
 }
